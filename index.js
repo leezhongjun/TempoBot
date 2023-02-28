@@ -10,7 +10,6 @@ const GUILD_ID = process.env.GUILD_ID || 'not set'
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Events, GatewayIntentBits, REST, Routes, Collection } = require('discord.js');
-const keepAlive = require('./server');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -71,7 +70,6 @@ for (const file of eventFiles) {
 }
 
 
-keepAlive();
 // Log in to Discord with your client's token
 client.login(TOKEN);
 
