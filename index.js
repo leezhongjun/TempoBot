@@ -1,5 +1,17 @@
 
-// const { clientId, guildId, token, publicKey } = require('./config.json');
+const express = require("express");
+const app = express();
+
+app.listen(8999, () => {
+  console.log("Project is running!");
+})
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+})
+
+
+
 require('dotenv').config()
 const CLIENT_ID = process.env.CLIENT_ID || 'not set'
 const TOKEN = process.env.TOKEN 
