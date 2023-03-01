@@ -7,7 +7,7 @@ Uses slash commands (/)
 
 *Currently hosted on discloudbot.com*
 
-*Uses discord.js and discord-player*
+*Uses discord.js 14.7.1 and discord-player 5.3.2*
 
 ## Functions
  - Play music (YouTube, Spotify and SoundCloud)
