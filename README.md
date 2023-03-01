@@ -1,3 +1,5 @@
+<img src="https://lh5.googleusercontent.com/xqCkuKguIUMx45bomz1jyHGsqp8smJhz9Hi-mDzzdGsreKqYPD9PE7vGIPjh3cMXlWU=w2400" data-canonical-src="https://lh5.googleusercontent.com/xqCkuKguIUMx45bomz1jyHGsqp8smJhz9Hi-mDzzdGsreKqYPD9PE7vGIPjh3cMXlWU=w2400" width="200" height="200" />
+
 # Tempo Bot
 A lightweight music bot for Discord
 
@@ -24,4 +26,3 @@ Uses slash commands (/)
 ## To host locally
  1. Create .env file with `TOKEN` and `CLIENT_ID`
  2. run `node index.js`
-
