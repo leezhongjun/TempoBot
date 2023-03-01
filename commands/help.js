@@ -9,7 +9,6 @@ module.exports = {
 		const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-					.setColor(0x0099FF)
                     .setLabel('Invite Tempo to your server') // label of the button
                     .setEmoji('➕') // emoji
                     .setURL('https://discord.com/oauth2/authorize?scope=bot&client_id=1079605657382166659&permissions=8') // URL of where the button leads the user
@@ -17,7 +16,6 @@ module.exports = {
             )
 			.addComponents(
                 new ButtonBuilder()
-					.setColor(0x0099FF)
                     .setLabel('View on GitHub') // label of the button
                     .setEmoji('👨‍💻') // emoji
                     .setURL('https://github.com/leezhongjun/Tempo-Bot') // URL of where the button leads the user
