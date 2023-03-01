@@ -99,7 +99,7 @@ player.on("error", (error, queue) => {
 // Load events
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
-	client.user.setPresence({ activities: [{ name: 'Using /help', type: ActivityType.Custom}], status: 'online' });
+	client.user.setPresence({ activities: [{ name: '/help', type: ActivityType.Streaming}], status: 'online' });
 });
 
 client.on('interactionCreate', async interaction => {
