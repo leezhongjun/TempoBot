@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('stop')
-		.setDescription('Stop playing all songs.'),
+		.setDescription('Stop playing and clear queue.'),
 	async execute(interaction, player) {
 		// interaction.guild is the object representing the Guild in which the command was run
 		if (!interaction.member.voice.channelId) {
@@ -25,7 +25,7 @@ module.exports = {
         const queue = player.getQueue(interaction.guildId);
         if (!queue || !queue.playing) 
 			return await interaction.followUp({ 
-				content: `❌ | Not playing anything!` 
+				content: `❌ | Not playing any music!`
 			});
 		
 		queue.destroy();

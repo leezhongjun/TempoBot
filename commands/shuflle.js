@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('skip')
-		.setDescription('Skip current song.'),
+		.setName('shuffle')
+		.setDescription('Shuffle song queue.'),
 	async execute(interaction, player) {
 		// interaction.guild is the object representing the Guild in which the command was run
 		if (!interaction.member.voice.channelId) {
@@ -28,23 +28,11 @@ module.exports = {
 				content: `❌ | Not playing any music!` 
 			});
 
-		var success = false
-		var currentTrack = queue.current;
-		if (queue.repeatMode === 1) {
-			queue.setRepeatMode(0);
-			success = queue.skip();
-			await wait(500);
-			queue.setRepeatMode(1);
-		} else {
-			success = queue.skip();
-		}
+		const success = queue.shuffle();
 		return await interaction.followUp({
-			content: success ? `⏭️ | Skipped **[${currentTrack.title}](<${currentTrack.url}>)**` : `❌ | Could not skip **[${currentTrack.title}](<${currentTrack.url}>)**`
+			content: success ? `🔀 | Queue shuffled!` : `❌ | Could not shuffle queue!`
 		});
 
 	},
 };
 
-function wait(ms) {
-    return new Promise((resolve) => setTimeout(() => resolve(), ms));
-};

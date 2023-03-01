@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('skip')
-		.setDescription('Skip current song.'),
+		.setName('clear')
+		.setDescription('Clear queue.'),
 	async execute(interaction, player) {
 		// interaction.guild is the object representing the Guild in which the command was run
 		if (!interaction.member.voice.channelId) {
@@ -22,29 +22,16 @@ module.exports = {
 
 		
 		await interaction.deferReply();
-		const queue = player.getQueue(interaction.guildId);
-        if (!queue || !queue.playing) 
-			return await interaction.followUp({ 
-				content: `❌ | Not playing any music!` 
+        const queue = player.getQueue(interaction.guildId);
+		if (typeof(queue) == "undefined" || queue.tracks.length <= 0){
+			return void interaction.followUp({ 
+				content: `❌ | No songs in queue!`
 			});
-
-		var success = false
-		var currentTrack = queue.current;
-		if (queue.repeatMode === 1) {
-			queue.setRepeatMode(0);
-			success = queue.skip();
-			await wait(500);
-			queue.setRepeatMode(1);
-		} else {
-			success = queue.skip();
-		}
+		} 
+		queue.clear();
 		return await interaction.followUp({
-			content: success ? `⏭️ | Skipped **[${currentTrack.title}](<${currentTrack.url}>)**` : `❌ | Could not skip **[${currentTrack.title}](<${currentTrack.url}>)**`
+			content: `✅ | Cleared queue!`
 		});
 
 	},
-};
-
-function wait(ms) {
-    return new Promise((resolve) => setTimeout(() => resolve(), ms));
 };

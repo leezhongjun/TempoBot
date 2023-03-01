@@ -4,7 +4,7 @@ const TOKEN = process.env.TOKEN
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, EmbedBuilder, GatewayIntentBits, REST, Routes, Collection } = require('discord.js');
+const { Client, EmbedBuilder, GatewayIntentBits, REST, Routes, Collection, ActivityType } = require('discord.js');
 const { Player } = require('discord-player');
 
 // Create a new client instance
@@ -54,29 +54,30 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 // Create a new player instance
 const player = new Player(client);
 
-function Embed_play(status, music_title, music_url, music_length, music_thumbnail, settings) {
-	const Embed_play = new EmbedBuilder()
+function EmbedPlay(status, musicTitle, musicUrl, musicLength, musicThumbnail, settings) {
+	const EmbedPlay = new EmbedBuilder()
 		.setColor('#FFFFFF')
-		.setTitle(music_title)
-		.setURL(music_url)
-		.setThumbnail(music_thumbnail)
-		.addFields({ name: status, value: `**Duration**: \`${music_length}\` | ${settings}`, inline: true })
+		.setTitle(musicTitle)
+		.setURL(musicUrl)
+		.setThumbnail(musicThumbnail)
+		.addFields({ name: status, value: `**Duration**: \`${musicLength}\` | ${settings}`, inline: true })
 		.setTimestamp()
-	return Embed_play;
+	return EmbedPlay;
 };
+
 const settings = (queue) =>
-    `**Volume**: \`${queue.volume}%\` | **Loop**: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All' : 'ONE') : 'Off'}\``;
+    `**Volume**: \`${queue.volume}%\` | **Loop**: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'Queue' : 'Single') : 'Off'}\``;
 
-	// Load player events
-player.on("trackStart", (queue, track) => queue.metadata.channel.send({ embeds: [Embed_play("🎶 | Now playing", track.title, track.url, track.duration, track.thumbnail, settings(queue))] }));
+// Load player events
+player.on("trackStart", (queue, track) => queue.metadata.channel.send({ embeds: [EmbedPlay("🎶 | Now playing", track.title, track.url, track.duration, track.thumbnail, settings(queue))] }));
 
-player.on("trackAdd", (queue, track) => queue.metadata.channel.send({ embeds: [Embed_play("🎶 | Added", track.title, track.url, track.duration, track.thumbnail, settings(queue))] }));
+player.on("trackAdd", (queue, track) => queue.metadata.channel.send({ embeds: [EmbedPlay("🎶 | Added", track.title, track.url, track.duration, track.thumbnail, settings(queue))] }));
 
 player.on("botDisconnect", queue => queue.metadata.channel.send("❌ | I was manually disconnected from the voice channel, clearing queue!"));
 
 player.on("channelEmpty", queue => queue.metadata.channel.send("❌ | Nobody is in the voice channel, leaving..."));
 
-player.on("queueEnd", queue => queue.metadata.channel.send("🔚 | Queue ended!"));
+player.on("queueEnd", queue => queue.metadata.channel.send("✅ | Queue ended!"));
 
 player.on("error", (error, queue) => {
 	switch (error) {
@@ -98,10 +99,11 @@ player.on("error", (error, queue) => {
 // Load events
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
+	client.user.setPresence({ activities: [{ name: 'music everywhere', type: ActivityType.Streaming, emoji: '🎶'}], status: 'online' });
 });
 
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+	if (!interaction.isCommand() && !interaction.isAutocomplete()) return;
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
@@ -111,7 +113,11 @@ client.on('interactionCreate', async interaction => {
 
 	try {
 		console.log(`Executing ${interaction.commandName}`);
-		await command.execute(interaction, player);
+		if (interaction.isAutocomplete()) {
+			await command.autocomplete(interaction, player);
+		} else {
+			await command.execute(interaction, player);
+		}
 	} catch (error) {
 		console.error(`Error executing ${interaction.commandName}`);
 		console.error(error);

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder , ApplicationCommandOptionType} = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,8 +30,9 @@ module.exports = {
 		volume = Math.max(0, volume);
 		volume = Math.min(200, volume);
 		const success = queue.setVolume(volume);
+		const volEmoji = volume >= 100 ? '🔊' : '🔉';
         return await interaction.followUp({
-			content: success ? `⏭️ | Volume set to \`${volume}%\`` : `❌ | Could not change volume!`
+			content: success ? `${volEmoji} | Volume set to \`${volume}%\`` : `❌ | Could not change volume!`
 		});
 
 

@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('skip')
-		.setDescription('Skip current song.'),
+		.setName('back')
+		.setDescription('Back to previous song.'),
 	async execute(interaction, player) {
 		// interaction.guild is the object representing the Guild in which the command was run
 		if (!interaction.member.voice.channelId) {
@@ -27,19 +27,15 @@ module.exports = {
 			return await interaction.followUp({ 
 				content: `❌ | Not playing any music!` 
 			});
-
-		var success = false
-		var currentTrack = queue.current;
-		if (queue.repeatMode === 1) {
-			queue.setRepeatMode(0);
-			success = queue.skip();
-			await wait(500);
-			queue.setRepeatMode(1);
-		} else {
-			success = queue.skip();
-		}
+		if (!queue.previousTracks[1])
+            return interaction.followUp({ 
+				content: `❌ | There was no music playing before.`
+			});
+		
+		var previousTrack = queue.previousTracks[1];
+		await queue.back();
 		return await interaction.followUp({
-			content: success ? `⏭️ | Skipped **[${currentTrack.title}](<${currentTrack.url}>)**` : `❌ | Could not skip **[${currentTrack.title}](<${currentTrack.url}>)**`
+			content: `⏪ | Rewound back to **[${previousTrack.title}](<${previousTrack.url}>)**`
 		});
 
 	},
